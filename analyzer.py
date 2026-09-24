@@ -50,7 +50,8 @@ def start_capture(interface="Wi-Fi", count=50):
     logging.info(f"Capture session initialized on {interface} for {count} packets.")
     
     # Sniff network traffic without storing in memory (store=0) for performance
-    sniff(iface=interface, prn=process_packet, count=count, store=0)
+    # Live capture ki jagah pcap file read karne ke liye offline argument use kar
+    sniff(offline="sample_traffic.pcap", prn=process_packet, store=0)
     
     print("Capture session completed. Traces saved to network_triage.log")
     logging.info("Capture session terminated successfully.")
