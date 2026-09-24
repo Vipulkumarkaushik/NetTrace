@@ -1,0 +1,33 @@
+name: NetTrace CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install scapy pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Generate Dummy Triage Log for Testing
+      run: |
+        echo "2026-09-24 10:45:12,450 | INFO | 802.11 Wi-Fi Frame Captured: 802.11 Beacon" > network_triage.log
+        echo "2026-09-24 10:45:14,001 | INFO | Capture session terminated successfully." >> network_triage.log
+        
+    - name: Test with pytest
+      run: |
+        pytest test_analyzer.py -v
